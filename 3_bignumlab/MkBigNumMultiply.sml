@@ -18,8 +18,8 @@ struct
    let
       fun multiply(x,y) = 
       if length(x)=0 orelse length(y) = 0 then empty()
-      else if (length(x)=1 orelse length(y)=1) andalso (nth x 0 = ZERO orelse nth y 0 = ZERO) then empty()
-      else if (length(x)=1 orelse length(y)=1) andalso nth x 0= ONE andalso nth y 0= ONE then singleton(ONE)
+      else if (length(x)=1 andalso nth x 0 = ZERO) orelse (length(y)=1 andalso nth y 0 = ZERO) then empty()
+      else if (length(x)=1 andalso length(y)=1) andalso nth x 0= ONE andalso nth y 0= ONE then singleton(ONE)
     else
       let
         val lenx = if length(x)>length(y) then length(x) else length(y)
@@ -33,10 +33,9 @@ struct
         val rps =r ++ s
         val pr : bit seq = multiply(p,r)
         val qs : bit seq = multiply(q,s)
-        val pqrsmul = multiply(ppq,rps) 
         val pqrs: bit seq = multiply(ppq,rps) -- pr -- qs
         fun transf (num,chuan) = append(tabulate (fn _ => ZERO) (num),chuan)
-        val npr: bit seq = transf(lenx,pr)
+        val npr: bit seq = transf(2*(lenx div 2),pr)
         val npqrs: bit seq = transf(lenx div 2,pqrs)
       in
         npr ++ npqrs ++ qs
