@@ -27,12 +27,13 @@ struct
               else if length(x)<length(y) then (append(x,tabulate (fn i => ZERO) (length(y)-length(x))),y)
               else (x,y)
         val (x,y) = fixlen(x,y)
-        val (p,q) = (take(x,length(x) div 2),drop(x,length(x) div 2))
-        val (r,s) = (take(x,length(x) div 2),drop(x,length(x) div 2))
+        val (q,p) = (take(x,length(x) div 2),drop(x,length(x) div 2))
+        val (s,r) = (take(y,length(y) div 2),drop(y,length(y) div 2))
         val ppq =p ++ q
         val rps =r ++ s
         val pr : bit seq = multiply(p,r)
         val qs : bit seq = multiply(q,s)
+        val pqrsmul = multiply(ppq,rps) 
         val pqrs: bit seq = multiply(ppq,rps) -- pr -- qs
         fun transf (num,chuan) = append(tabulate (fn _ => ZERO) (num),chuan)
         val npr: bit seq = transf(lenx,pr)
