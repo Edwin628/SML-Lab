@@ -11,16 +11,15 @@ struct
   fun x ++ y =
     let
       val len = if length(x)>length(y) then length(x) else length(y)
-      fun addZero x i = nth x length(x)+i = 0 
-          if length(x)>length(y) then append(y,tabulate (fn i=>addZero(y,i)) length(x)-length(y)-1)
-          else if length(x)<length(y) then append(x,tabulate (fn i=>addZero(x,i)) length(y)-length(x)-1)
-      fun addx x y =
+      fun fixlen(x,y) = if length(x)>length(y) then (x,(append (y, tabulate (fn i => ZERO) (length(x)-length(y)-1))))
+              else if length(x)<length(y) then (append(x,tabulate (fn i => ZERO) (length(y)-length(x)-1)),y)
+              else (x,y)
+      fun addx (x,y) =
         let 
           fun addxx i =
-          case (nth x i,nth y i) of 
-          (ZERO,ZERO)=>STOP
-          (ZERO,ONE)|(ONE,ZERO)=>PROP
-          (ONE,ONE) =>GEN
+          case (nth x i,nth y i) of (ZERO,ZERO)=>STOP
+          |((ZERO,ONE)|(ONE,ZERO))=>PROP
+          |(ONE,ONE) => GEN
         in
           tabulate addxx len
         end
@@ -45,8 +44,8 @@ struct
           translate(nth init2 i)
         end
     in
-      if nth init2 length(init2)-1 = GEN then append(tabulate trasnlateResult length(init2)-1,singleton ONE)
-      else tabulate trasnlateResult length(init2)-1
+      if nth init2 (length(init2)-1) = GEN then append(tabulate trasnlateResult (length(init2)-1),singleton ONE)
+      else tabulate trasnlateResult (length(init2)-1)
     end
     
   val add = op++
