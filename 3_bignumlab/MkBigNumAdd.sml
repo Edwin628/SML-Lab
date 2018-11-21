@@ -9,7 +9,10 @@ struct
   datatype carry = GEN | PROP | STOP
 
   fun x ++ y =
-    raise NotYetImplemented
+    let
+      fun fixLen x y = if length(x)>length(y) then 
+    in
+    end
     
   val add = op++
 end
