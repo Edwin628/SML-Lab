@@ -14,6 +14,7 @@ struct
       fun fixlen(x,y) = if length(x)>length(y) then (x,(append (y, tabulate (fn i => ZERO) (length(x)-length(y)))))
               else if length(x)<length(y) then (append(x,tabulate (fn i => ZERO) (length(y)-length(x))),y)
               else (x,y)
+      val (x,y)=fixlen(x,y)
       fun addx (x,y) =
         let 
           fun addxx i =
@@ -40,8 +41,8 @@ struct
         let
           fun compare (l,t)=
           case (l,t) of (GEN,GEN) => ONE
+          |(STOP,GEN) => ONE
           |(PROP,PROP) => ONE
-          |(STOP,PROP) => ONE
           |(PROP,STOP) => ONE
           |_ => ZERO
         in
