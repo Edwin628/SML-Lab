@@ -24,7 +24,7 @@ struct
         tabulate reversedigit len
         end
     in
-      drop((x ++ (reverse(y) ++ singleton ONE)),length y-1)
+      take(x ++ reverse(y) ++ singleton ONE, len)
     end
       
   val sub = op--
