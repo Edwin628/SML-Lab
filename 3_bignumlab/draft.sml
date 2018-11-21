@@ -27,3 +27,8 @@ fun copy (c1,c2) =
         if last = GEN then append (rst',singleton ONE)
         else rst'
       end
+
+
+if length(x)=0 orelse length(y) = 0 then empty()
+      else if (length(x)=1 orelse length(y)=1) andalso (nth x 0 = ZERO orelse nth y 0 = ZERO) then empty()
+      else if (length(x)=1 orelse length(y)=1) andalso nth x 0= ONE andalso nth y 0= ONE then singleton(ONE)
