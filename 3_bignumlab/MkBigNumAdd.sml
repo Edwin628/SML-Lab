@@ -10,11 +10,16 @@ struct
 
   fun x ++ y =
     let
-      val len = if length(x)>length(y) then length(x) else length(y)
-      fun fixlen(x,y) = if length(x)>length(y) then (x,(append (y, tabulate (fn i => ZERO) (length(x)-length(y)))))
-              else if length(x)<length(y) then (append(x,tabulate (fn i => ZERO) (length(y)-length(x))),y)
+      val lenx = length(x)
+      val leny = length(y)
+      val len = if lenx>leny then lenx else leny
+      (*function fixlen is used to make two sequence the same length*)
+      fun fixlen(x,y) = if lenx>leny then (x,(append (y, tabulate (fn i => ZERO) (lenx-leny))))
+              else if lenx<leny then (append(x,tabulate (fn i => ZERO) (leny-lenx)),y)
               else (x,y)
       val (x,y)=fixlen(x,y)
+      (*function addx is used to caculate the sum of each corresponding bit, the result is 
+      the carrybit information*)
       fun addx (x,y) =
         let 
           fun addxx i =
@@ -25,6 +30,8 @@ struct
           tabulate addxx len
         end
       val init1 = addx (x,y) 
+      (*function getSomething is used to decide the pattern of each bit 
+      after adding the carrybit *)
       fun getSomething init =
         let
           fun carry (x,y)=
@@ -37,6 +44,9 @@ struct
            scan carry STOP init
         end
       val (carryseq,last) = getSomething init1
+      (*function compareResult is used to decide the result of each bit is 0 or 1 ,
+      notice that if we have GEN type in the most significant bir ,we must make the
+      the length of bit sequence plus one*)
       fun compareResult i = 
         let
           fun compare (l,t)=

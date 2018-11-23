@@ -17,6 +17,7 @@ struct
   fun x ** y = 
    let
       fun multiply(x,y) = 
+      (*firstly we need to decide some base case*)
       if length(x)=0 orelse length(y) = 0 then empty()
       else if (length(x)=1 andalso nth x 0 = ZERO) orelse (length(y)=1 andalso nth y 0 = ZERO) then empty()
       else if (length(x)=1 andalso length(y)=1) andalso nth x 0= ONE andalso nth y 0= ONE then singleton(ONE)

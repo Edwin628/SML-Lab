@@ -27,7 +27,9 @@ fun copy (c1,c2) =
         if last = GEN then append (rst',singleton ONE)
         else rst'
       end
-
+        val pr : bit seq = multiply(p,r)
+        val qs : bit seq = multiply(q,s)
+        val pqrs: bit seq = multiply(ppq,rps) -- pr -- qs
 
 if length(x)=0 orelse length(y) = 0 then empty()
       else if (length(x)=1 orelse length(y)=1) andalso (nth x 0 = ZERO orelse nth y 0 = ZERO) then empty()
