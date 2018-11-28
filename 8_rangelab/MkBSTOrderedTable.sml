@@ -14,14 +14,18 @@ struct
 
   (* Remember, type 'a table = 'a Tree.bst *)
 
-  (* Remove this line before submitting! *)
-  exception NYI
 
   fun first (T : 'a table) : (key * 'a) option =
-    raise NYI   
+        case expose T
+          of NONE => NONE
+           | SOME {key, value, left, right} => 
+           if left = NONE then SOME (key,value) else first left
 
   fun last (T : 'a table) : (key * 'a) option =
-    raise NYI
+        case expose T
+          of NONE => NONE
+           | SOME {key, value, left, right} => 
+           if right = NONE then SOME (key,value) else last right
 		      
   fun previous (T : 'a table) (k : key) : (key * 'a) option =
     raise NYI
