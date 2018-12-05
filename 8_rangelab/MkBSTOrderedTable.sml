@@ -7,11 +7,11 @@ struct
 
   (* Include all the functionalities of the standard Table *)
   open Table
-
+  open Tree
   (* This is defined after "open" so it doesn't get overwritten *)
   structure Key = Tree.Key
   type key = Key.t
-
+  exception NYI
   (* Remember, type 'a table = 'a Tree.bst *)
 
 
@@ -19,25 +19,26 @@ struct
         case expose T
           of NONE => NONE
            | SOME {key, value, left, right} => 
-           if left = NONE then SOME (key,value) else first left
+            case expose left of NONE => SOME (key,value) 
+            | _ => (first left)
 
   fun last (T : 'a table) : (key * 'a) option =
         case expose T
           of NONE => NONE
            | SOME {key, value, left, right} => 
-           if right = NONE then SOME (key,value) else last right
+            case expose right of NONE => SOME (key,value)
+            | _ => (last right)
 		      
   fun previous (T : 'a table) (k : key) : (key * 'a) option =
-    raise NYI
+      let val (ltree,b,rtree)=splitAt (T,k) in last ltree end
 
   fun next (T : 'a table) (k : key) : (key * 'a) option =
-    raise NYI
+      let val (ltree,b,rtree)=splitAt (T,k) in first rtree end
 
   fun join (L : 'a table, R : 'a table) : 'a table =
-    raise NYI
-
+      Tree.join (L,R)
   fun split (T : 'a table, k : key) : 'a table * 'a option * 'a table =
-    raise NYI
+      splitAt (T,k)
 
   fun getRange (T : 'a table) (low : key, high : key) : 'a table =
     raise NYI
