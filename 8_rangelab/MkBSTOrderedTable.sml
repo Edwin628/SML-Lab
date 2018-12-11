@@ -30,18 +30,32 @@ struct
             | _ => (last right)
 		      
   fun previous (T : 'a table) (k : key) : (key * 'a) option =
-      let val (ltree,b,rtree)=splitAt (T,k) in last ltree end
+        let val (ltree,b,rtree)=splitAt (T,k) in last ltree end
 
   fun next (T : 'a table) (k : key) : (key * 'a) option =
-      let val (ltree,b,rtree)=splitAt (T,k) in first rtree end
+        let val (ltree,b,rtree)=splitAt (T,k) in first rtree end
 
   fun join (L : 'a table, R : 'a table) : 'a table =
-      Tree.join (L,R)
+        Tree.join (L,R)
   fun split (T : 'a table, k : key) : 'a table * 'a option * 'a table =
-      splitAt (T,k)
+        Tree.splitAt (T,k)
 
   fun getRange (T : 'a table) (low : key, high : key) : 'a table =
-    raise NYI
+        let
+            val (lowl,lowvalue,lowr) = split(T,low)
+            val (highl,highvalue,highr) = split(lowr,high)
+            fun mkThing (key,optionx) = 
+                  case optionx of NONE => empty()
+                  |_ =>
+                  let
+                        val SOME p = optionx
+                  in
+                        singleton(key,p)
+                  end
+            val joinlow=Tree.join(highl,mkThing(low,lowvalue))
+            val newtree = Tree.join(joinlow,mkThing(high,highvalue))
+        in newtree end 
+       
 						       
 
 end
