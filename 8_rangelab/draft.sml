@@ -16,3 +16,36 @@ OS.FileSys.chDir("C:\\Users\\0MEN\\Desktop\\Lab\\8_rangelab");
           of LEAf => NONE
            | NODE of SOME {key, value, left, right} => 
            if right = LEAF then SOME (key,value) else last right
+
+
+  case find T x of  SOME _ => let val SOME thing = find T x in thing end
+          | NONE => let 
+          val (l,_,r) = split(T,x) 
+          (*val (_,SOME thing) = last r in thing end*)
+
+(*fun getinfoL T x = let
+          val (l,opt,r) = split(T,x) 
+          val (leftnum,leftdian) = case opt of SOME thing => (insideRec thing,1)
+           | NONE => case last l of NONE => (0,0) 
+                     | SOME (_, thing) => (insideRec thing,0)
+          in
+          (leftnum,leftdian)
+          end*)
+
+  fun getinfoL T x = let 
+           val (l,opt,r) = split(T,x) 
+           val leftnum = case opt of SOME thing => thing
+           | NONE => case last l of NONE =>empty()
+                    | SOME (_, SOME thing)=> thing
+          in
+          leftnum 
+          end
+  fun getinfoR T x = let 
+           val (l,opt,r) = split(T,x) 
+           val rightnum = case opt of SOME thing => thing
+           | NONE => case last l of NONE =>empty()
+                    | SOME (_, SOME thing) => thing 
+          in
+          rightnum 
+          end   
+
