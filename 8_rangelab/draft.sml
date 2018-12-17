@@ -22,6 +22,18 @@ OS.FileSys.chDir("C:\\Users\\0MEN\\Desktop\\Lab\\8_rangelab");
           | NONE => let 
           val (l,_,r) = split(T,x) 
           (*val (_,SOME thing) = last r in thing end*)
+-----the second way to implement the algorithm-----
+        val yValue = Seq.map (fn (x,y) => (y,y)) SortedS
+        fun combine (a,b) = OrdTable.insert (fn (x,y)=>x) b a
+        val (yValue2,last) = Seq.iterh combine (empty()) yValue
+        val yValue3 = Seq.append (Seq.drop(yValue2,1),Seq.singleton(last))
+        val yValue2 = Seq.tabulate (fn i => Seq.iter combine (empty()) (Seq.take (yValue, i))) (Seq.length yValue+1)
+        val yValue3 = Seq.drop(yValue2,1)
+
+        in
+        OrdTable.fromSeq (Seq.zip xValue yValue3)
+----the second way to implement the algorithm-----
+
 
 (*fun getinfoL T x = let
           val (l,opt,r) = split(T,x) 
