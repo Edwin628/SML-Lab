@@ -52,7 +52,7 @@ struct
   val points2 : point seq = % []
   val points3 = % [(10000,10000),(0,0)]
   val points4 = tabulate (fn i => (i,i)) 1000
-
+  val ponits5 = %[(~2,~2),(~1,~1),(0,0),(1,1),(2,2)]
   val testsCount = [
     (points1, ((1,3),(5,1))),
     (points1, ((2,4),(4,2))),
@@ -60,7 +60,8 @@ struct
 
     (points2, ((0,10),(10,0))),
     (points3, ((0,10000),(10000,0))),
-    (points4, ((0,500),(1000,0)))
+    (points4, ((0,500),(1000,00))),
+    (ponits5, ((~1,~1),(1,1)))
   ]
 
 
