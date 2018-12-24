@@ -59,42 +59,39 @@ struct
             let 
               val neibor = outNeighbors G v
               val unvisneibor = Seq.filter (fn v =>not (Set.find (Table.domain reasp) v)) neibor
-              val parentpair =Seq.map (fn u =>(u,v)) unvisneibor
-              val outpair = (parentpair,unvisneibor)
+              val outpair = (v,unvisneibor)
             in outpair end
           fun getunvis (a,b) = b
           fun getparen (a,b) = a
           val info = Seq.map outNeibor frontier
-          val new_asp  = Table.merge (fn (a, b) => a) (reasp,(Table.collect Seq.flatten(Seq.map getparen info)))
-          val new_frontier =Seq.flatten (Seq.map getunvis info)
+          fun getpair next  = Seq.map (fn s => (s, getparen next)) (getunvis next)
+          val parentpair =Table.collect (Seq.flatten (map getpair info))
+          val new_asp  = Table.merge (fn (a, b) => a) (reasp,parentpair)
+          val new_frontier= Set.toSeq (Table.domain parentpair)
         in
           bfs new_asp new_frontier
         end
     in
-      bfs (Table.singleton(v,Seq.singleton(v))) Seq.singleton(v)
+      bfs (Table.singleton(v,Seq.singleton(v))) (Seq.singleton(v):vertex seq)
     end
 
   (* Task 2.5 *)
 fun report (A : asp) (v : vertex) : vertex seq seq =
-  let
-      fun find_parent x = getOpt(Table.find A x, Seq.empty ())
-      (*v_asp : compare 2 vertices*)
-      fun v_cmp (a : vertex, b : vertex) = 
-        if Table.Key.equal (a, b) then EQUAL else LESS
-      (*del_rep : delete repeated paths*)
-      fun del_rep (s : vertex seq seq) = 
-        map (fn p => #1 p) (Seq.collect (collate v_cmp) 
-          (zip s (tabulate (fn _ => ()) (length s))))
-      fun make_path v : vertex seq seq =
-        if length (find_parent v) = 0 then empty()
-        else if v_cmp (nth (find_parent v) 0, v) = EQUAL then %[%[v]]
+    case Table.find A v of NONE => Seq.empty()
+    |_ => 
+    let
+        fun decide v = let val SOME inv = Table.find A v in inv end
+        fun path v = 
+        if (Seq.length (decide v))=1 andalso Key.equal(v,nth (decide v) 0) then Seq.singleton(Seq.singleton(v))  
         else let
-          val nexts_data = find_parent v
-          val nexts : vertex seq seq seq = map make_path nexts_data
+          val inVseq = decide v
+          val ininVseq = Seq.map path inVseq
+          val pathx = Seq.map (fn u => (Seq.flatten u)) ininVseq
+          val pathxx = Seq.map (fn u => (Seq.append(u,Seq.singleton(v)))) pathx
         in
-          flatten (map (fn x => map (fn y => append (y, %[v])) x) nexts)
+          pathxx
         end
     in
-      del_rep(make_path v)
+       path v
     end
 end
