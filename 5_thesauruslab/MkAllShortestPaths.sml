@@ -52,13 +52,13 @@ struct
   (* Task 2.4 *)
   fun makeASP (G : graph) (v : vertex) : asp =
     let
-      fun bfs (reasp:asp) (frontier:vertex seq) =
+      fun bfs (reasp:asp) (frontier:vertex seq)(visited : Set.set) =
         if Seq.length frontier = 0 then reasp
         else let
           fun outNeibor v = 
             let 
               val neibor = outNeighbors G v
-              val unvisneibor = Seq.filter (fn v =>not (Set.find (Table.domain reasp) v)) neibor
+              val unvisneibor = Seq.filter (fn v =>not (Set.find visited v)) neibor
               val outpair = (v,unvisneibor)
             in outpair end
           fun getunvis (a,b) = b
@@ -68,11 +68,12 @@ struct
           val parentpair =Table.collect (Seq.flatten (map getpair info))
           val new_asp  = Table.merge (fn (a, b) => a) (reasp,parentpair)
           val new_frontier= Set.toSeq (Table.domain parentpair)
+          val new_visited = Table.domain new_asp
         in
-          bfs new_asp new_frontier
+          bfs new_asp new_frontier new_visited
         end
     in
-      bfs (Table.singleton(v,Seq.singleton(v))) (Seq.singleton(v):vertex seq)
+      bfs (Table.singleton(v,Seq.singleton(v))) (Seq.singleton(v):vertex seq) (Set.empty())
     end
 
   (* Task 2.5 *)
