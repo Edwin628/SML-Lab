@@ -86,11 +86,11 @@ fun report (A : asp) (v : vertex) : vertex seq seq =
         if (Seq.length (decide v))=1 andalso Key.equal(v,nth (decide v) 0) then Seq.singleton(Seq.singleton(v))  
         else let
           val inVseq = decide v
-          val ininVseq = Seq.map path inVseq
-          val pathx = Seq.map (fn u => (Seq.flatten u)) ininVseq
-          val pathxx = Seq.map (fn u => (Seq.append(u,Seq.singleton(v)))) pathx
+            val ininseq= Seq.map path inVseq
+            val pathx = Seq.flatten ininseq
+            val pathxx=Seq.map (fn u => Seq.append(u,Seq.singleton(v))) pathx
         in
-          pathxx
+         pathxx
         end
     in
        path v
