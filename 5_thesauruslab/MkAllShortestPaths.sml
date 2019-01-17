@@ -18,7 +18,9 @@ struct
   fun makeGraph (E : edge seq) : graph =
         if Seq.length E = 0 then (Table.empty(),0)
         else  let 
+              (*w=O(|E|log|E|) s=O(log^2|E|)*)
                 val formoutedge = Table.collect E
+              (*w=O(1) s=O(1)*)
                 val edgenum = Seq.length E
               in
                 (formoutedge,edgenum)
@@ -42,6 +44,7 @@ struct
   fun outNeighbors (G : graph) (v : vertex) : vertex seq =
       let
         val (Gra,_)=G
+        (*w=O(log|V|) s=O(log|V|)*)
         val outver = case find Gra v of NONE => Seq.empty()
           |SOME outver => outver
       in
@@ -52,6 +55,11 @@ struct
   (* Task 2.4 *)
   fun makeASP (G : graph) (v : vertex) : asp =
     let
+    (*复杂度分析：这个做表我使用到了bfs的思想，唯一不同的是frontier我选择
+    的是内部的是在已访问节点的边界，因为每个节点至多访问一次，每条边至多出现
+    一次操作，所以Work操作为O(|E|log|V|)。对span进行分析，因为每轮操作为
+    O(log^2|V|),最长的那个长度即为Span的情况，有D轮，所以span为O(Dlog^2|V|)
+    *)
       fun bfs (reasp:asp) (frontier:vertex seq)(visited : Set.set) =
         if Seq.length frontier = 0 then reasp
         else let
@@ -78,6 +86,7 @@ struct
 
   (* Task 2.5 *)
 fun report (A : asp) (v : vertex) : vertex seq seq =
+
     case Table.find A v of NONE => Seq.empty()
     |_ => 
     let
@@ -85,9 +94,13 @@ fun report (A : asp) (v : vertex) : vertex seq seq =
         fun path v = 
         if (Seq.length (decide v))=1 andalso Key.equal(v,nth (decide v) 0) then Seq.singleton(Seq.singleton(v))  
         else let
+        (*w=O(log|V|) s=O(log|V|*)
           val inVseq = decide v
+          (*共递归小于log|V|层*)
             val ininseq= Seq.map path inVseq
-            val pathx = Seq.flatten ininseq
+            (*w=O(ni) s=O(1)*)
+            val pathx = Seq.flatten ininseq           
+            (*w=O(ni) s=O(1)*)
             val pathxx=Seq.map (fn u => Seq.append(u,Seq.singleton(v))) pathx
         in
          pathxx
